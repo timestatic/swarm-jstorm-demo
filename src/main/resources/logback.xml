@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="common_appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/demo.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>logs/demo.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <maxHistory>10</maxHistory>
+            <cleanHistoryOnStart>true</cleanHistoryOnStart>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%thread] - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+
+    <root>
+        <level value="info"/>
+        <appender-ref ref="common_appender"/>
+    </root>
+
+    <logger name="com.github" additivity="false" level="info">
+        <appender-ref ref="common_appender"/>
+    </logger>
+
+    <logger name="org.springframework" additivity="false" level="info">
+        <appender-ref ref="common_appender"/>
+    </logger>
+
+    <logger name="com.alibaba" additivity="false" level="info">
+        <appender-ref ref="common_appender"/>
+    </logger>
+
+
+</configuration>
