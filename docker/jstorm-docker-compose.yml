@@ -1,0 +1,70 @@
+version: '3.2'
+services:
+    nimbus:
+        image: timestatic/jstorm:2.2.1
+        deploy:
+            replicas: 1
+            update_config:
+              parallelism: 1
+              delay: 10s
+              failure_action: continue
+              monitor: 60s
+              max_failure_ratio: 0.3
+            restart_policy:
+              condition: on-failure
+              delay: 5s
+              window: 60s
+        volumes:
+             - /mydata/jstorm/nimbus/log:/opt/jstorm/logs
+        environment:
+           - storm_zookeeper_servers=10.1.2.7 # zookeeper address
+           - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
+        networks:
+          - default
+        command: jstorm nimbus
+
+    supervisor:
+        image: timestatic/jstorm:2.2.1
+        depends_on:
+            - nimbus
+        deploy:
+            replicas: 1
+            update_config:
+              parallelism: 1
+              delay: 10s
+              failure_action: continue
+              monitor: 60s
+              max_failure_ratio: 0.3
+            restart_policy:
+              condition: on-failure
+              delay: 5s
+              window: 60s
+        volumes:
+             - /mydata/jstorm/supervisor/log:/opt/jstorm/logs
+        environment:
+           - storm_zookeeper_servers=10.1.2.7 # zookeeper address
+           - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
+        networks:
+          - default
+        command: jstorm supervisor
+
+    ui:
+        image: timestatic/jstorm-ui:2.2.1
+        ports:
+          - "8080:8080"
+        deploy:
+            replicas: 1
+            restart_policy:
+              condition: on-failure
+              delay: 5s
+              window: 60s
+        environment:
+           - storm_zookeeper_servers=10.1.2.7 # zookeeper address
+           - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
+        networks:
+          - default
+
+networks:
+        default:
+          external:
+            name: net_swarm_test

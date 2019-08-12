@@ -1,0 +1,28 @@
+version: "3.2"
+services:
+    demo:
+      image: timestatic/jstorm:2.2.1
+      networks:
+        - default
+      environment:
+        - storm_zookeeper_servers=10.1.2.7
+        - nimbus_seeds=jstormswarm_nimbus
+      volumes:
+        - ./jstorm-demo-jar-with-dependencies.jar:/jstorm-demo.jar
+      deploy:
+          replicas: 1
+          update_config:
+              parallelism: 1
+              delay: 10s
+              failure_action: continue
+              monitor: 60s
+              max_failure_ratio: 0.3
+          restart_policy:
+              condition: on-failure
+              delay: 5s
+              window: 60s
+      command: jstorm jar /jstorm-demo.jar com.github.timestatic.jstormdemo.Application wordCountDemo
+networks:
+  default:
+    external:
+          name: net_swarm_test

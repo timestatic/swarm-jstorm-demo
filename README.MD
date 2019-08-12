@@ -1,24 +1,17 @@
-Docker Swarm 
+JStorm docker image and JStorm cluster based on Docker Swarm 
 
-build jstorm image
+start up jstorm nimbus, supervisor and ui
 ```shell
-docker build -t 
+docker network create --driver overlay net_swarm_test
+docker stack deploy -c jstorm-docker-compose.yml jstormswarm
 ```
 
-build jstorm-ui image
+submit demo topology
 ```shell
-docker build -t 
+ docker stack deploy -c demo.yaml jstorm
 ```
 
 build demo-app image
 ```shell
 mvn package assembly:single
-```
-```shell
-docker build -t 
-```
-
-start up jstorm nimbus, supervisor and ui
-```shell
-docker stack deploy -c jstorm-docker-compose.yml jstormswarm
 ```
