@@ -15,7 +15,7 @@ services:
               delay: 5s
               window: 60s
         volumes:
-             - /mydata/jstorm/nimbus/log:/opt/jstorm/logs
+             - /mydata/jstorm/nimbus/log:/opt/jstorm/logs  # mkdir -p /mydata/jstorm/nimbus/log
         environment:
            - storm_zookeeper_servers=10.1.2.7 # zookeeper address
            - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
@@ -40,7 +40,7 @@ services:
               delay: 5s
               window: 60s
         volumes:
-             - /mydata/jstorm/supervisor/log:/opt/jstorm/logs
+             - /mydata/jstorm/supervisor/log:/opt/jstorm/logs  # mkdir -p /mydata/jstorm/supervisor/log
         environment:
            - storm_zookeeper_servers=10.1.2.7 # zookeeper address
            - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
@@ -61,6 +61,8 @@ services:
         environment:
            - storm_zookeeper_servers=10.1.2.7 # zookeeper address
            - nimbus_seeds=jstormswarm_nimbus  # nimbus service name
+        volumes:
+             - /mydata/jstorm/ui/log:/usr/local/tomcat/logs  # mkdir -p /mydata/jstorm/ui/log
         networks:
           - default
 
